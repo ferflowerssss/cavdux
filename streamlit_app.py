@@ -64,17 +64,6 @@ if total_percentage == 100:
     youth_formed = calculate_people_formed(youth_investment, quality_level, base_cost_youth)
     directors_formed = calculate_people_formed(directors_investment, quality_level, base_cost_directors)
 
-    # Crear gráfica circular
-    st.write('### Distribución de la Inversión')
-    labels = ['Familia (Mapa)', 'Maestros (Veriedu)', 'Jóvenes (Dux)', 'Directores (ADEM)']
-    values = [family_investment, teachers_investment, youth_investment, directors_investment]
-    colors = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99']
-    
-    fig, ax = plt.subplots()
-    ax.pie(values, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
-    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    st.pyplot(fig)
-
     # Mostrar distribución de inversión en dólares
     st.write('### Distribución de la Inversión en Dólares')
     st.write(f'**Familia (Mapa):** ${family_investment:,.2f}')
@@ -102,6 +91,7 @@ else:
 # Información adicional o llamada a la acción
 st.write('## ¿Interesado en invertir?')
 st.write('Contacte a Cavdux para más información sobre cómo puede contribuir y el impacto de su inversión.')
+
 
 
 
