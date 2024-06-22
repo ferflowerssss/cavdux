@@ -1,5 +1,5 @@
 import streamlit as st
-import plotly.graph_objects as go
+import matplotlib.pyplot as plt
 
 # Título de la aplicación
 st.title('Modelo de Inversión Flexible en Cavdux')
@@ -33,12 +33,14 @@ if total_percentage == 100:
     # Crear gráfica de tarta
     labels = ['Familia (Mapa)', 'Maestros (Veriedu)', 'Jóvenes (Dux)', 'Directores (ADEM)']
     values = [family_investment, teachers_investment, youth_investment, directors_investment]
-
-    fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.3)])
-    fig.update_layout(title_text='Distribución de Inversión', title_x=0.5)
+    colors = ['#ff9999','#66b3ff','#99ff99','#ffcc99']
+    
+    fig, ax = plt.subplots()
+    ax.pie(values, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
+    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
     # Mostrar gráfica de tarta
-    st.plotly_chart(fig)
+    st.pyplot(fig)
 
     # Mostrar distribución de inversión en dólares
     st.write('### Distribución de la Inversión en Dólares')
@@ -61,4 +63,5 @@ else:
 # Información adicional o llamada a la acción
 st.write('## ¿Interesado en invertir?')
 st.write('Contacte a Cavdux para más información sobre cómo puede contribuir y el impacto de su inversión.')
+
 
