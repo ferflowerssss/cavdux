@@ -22,12 +22,29 @@ if total_percentage != 100:
 # Barra deslizadora para nivel de calidad de formación
 quality_level = st.slider('Nivel de Calidad de Formación', min_value=0, max_value=100, value=50, step=1, help='Izquierda: Priorizar Alcance, Derecha: Priorizar Calidad')
 
-# Cálculo de la distribución de la inversión
+# Función para calcular el número de personas formadas
+def calculate_people_formed(investment, quality_level, base_cost):
+    # El costo efectivo por persona disminuye con el aumento del alcance (menor calidad)
+    cost_per_person = base_cost * (1 + (100 - quality_level) / 100)
+    return investment // cost_per_person
+
+# Cálculo de la distribución de la inversión y número de personas formadas
 if total_percentage == 100:
     family_investment = investment * (family_percentage / 100)
     teachers_investment = investment * (teachers_percentage / 100)
     youth_investment = investment * (youth_percentage / 100)
     directors_investment = investment * (directors_percentage / 100)
+
+    # Base cost per person for each category
+    base_cost_family = 100
+    base_cost_teachers = 200
+    base_cost_youth = 150
+    base_cost_directors = 250
+
+    family_formed = calculate_people_formed(family_investment, quality_level, base_cost_family)
+    teachers_formed = calculate_people_formed(teachers_investment, quality_level, base_cost_teachers)
+    youth_formed = calculate_people_formed(youth_investment, quality_level, base_cost_youth)
+    directors_formed = calculate_people_formed(directors_investment, quality_level, base_cost_directors)
 
     # Mostrar distribución de inversión en dólares
     st.write('### Distribución de la Inversión en Dólares')
@@ -45,12 +62,21 @@ if total_percentage == 100:
     else:
         st.write(f'Equilibrado entre Alcance y Calidad (Nivel de Calidad: {quality_level}%)')
 
-    # Crear gráfica de tarta manualmente usando Unicode
-    st.write('### Gráfica de Tarta (Simbólica)')
-    st.write('Familia (Mapa): ', '🔵' * (family_percentage // 5))
-    st.write('Maestros (Veriedu): ', '🟢' * (teachers_percentage // 5))
-    st.write('Jóvenes (Dux): ', '🟠' * (youth_percentage // 5))
-    st.write('Directores (ADEM): ', '🔴' * (directors_percentage // 5))
+    # Mostrar número de personas formadas
+    st.write('### Número de Personas Formadas')
+    st.write(f'**Familia (Mapa):** {family_formed} personas')
+    st.write(f'**Maestros (Veriedu):** {teachers_formed} personas')
+    st.write(f'**Jóvenes (Dux):** {youth_formed} personas')
+    st.write(f'**Directores (ADEM):** {directors_formed} personas')
+
+    # Crear gráfica de resumen
+    st.write('### Resumen Visual')
+    st.bar_chart({
+        'Familia (Mapa)': [family_formed],
+        'Maestros (Veriedu)': [teachers_formed],
+        'Jóvenes (Dux)': [youth_formed],
+        'Directores (ADEM)': [directors_formed]
+    })
 
 else:
     st.write('Por favor, asegúrese de que la suma de los porcentajes de inversión sea 100%.')
@@ -58,6 +84,7 @@ else:
 # Información adicional o llamada a la acción
 st.write('## ¿Interesado en invertir?')
 st.write('Contacte a Cavdux para más información sobre cómo puede contribuir y el impacto de su inversión.')
+
 
 
 
