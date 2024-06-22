@@ -1,5 +1,4 @@
 import streamlit as st
-import matplotlib.pyplot as plt
 
 # Título de la aplicación
 st.title('Modelo de Inversión Flexible en Cavdux')
@@ -30,18 +29,6 @@ if total_percentage == 100:
     youth_investment = investment * (youth_percentage / 100)
     directors_investment = investment * (directors_percentage / 100)
 
-    # Crear gráfica de tarta
-    labels = ['Familia (Mapa)', 'Maestros (Veriedu)', 'Jóvenes (Dux)', 'Directores (ADEM)']
-    values = [family_investment, teachers_investment, youth_investment, directors_investment]
-    colors = ['#ff9999','#66b3ff','#99ff99','#ffcc99']
-    
-    fig, ax = plt.subplots()
-    ax.pie(values, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
-    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
-    # Mostrar gráfica de tarta
-    st.pyplot(fig)
-
     # Mostrar distribución de inversión en dólares
     st.write('### Distribución de la Inversión en Dólares')
     st.write(f'**Familia (Mapa):** ${family_investment:,.2f}')
@@ -57,11 +44,20 @@ if total_percentage == 100:
         st.write(f'Priorizar Calidad (Nivel de Calidad: {quality_level}%)')
     else:
         st.write(f'Equilibrado entre Alcance y Calidad (Nivel de Calidad: {quality_level}%)')
+
+    # Crear gráfica de tarta manualmente usando Unicode
+    st.write('### Gráfica de Tarta (Simbólica)')
+    st.write('Familia (Mapa): ', '🔵' * (family_percentage // 5))
+    st.write('Maestros (Veriedu): ', '🟢' * (teachers_percentage // 5))
+    st.write('Jóvenes (Dux): ', '🟠' * (youth_percentage // 5))
+    st.write('Directores (ADEM): ', '🔴' * (directors_percentage // 5))
+
 else:
     st.write('Por favor, asegúrese de que la suma de los porcentajes de inversión sea 100%.')
 
 # Información adicional o llamada a la acción
 st.write('## ¿Interesado en invertir?')
 st.write('Contacte a Cavdux para más información sobre cómo puede contribuir y el impacto de su inversión.')
+
 
 
