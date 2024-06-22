@@ -20,13 +20,31 @@ if total_percentage != 100:
     st.sidebar.warning('La suma de los porcentajes debe ser 100%. Actualmente es: {}%'.format(total_percentage))
 
 # Barra deslizadora para nivel de calidad de formación
-quality_level = st.slider('Nivel de Calidad de Formación', min_value=0, max_value=100, value=50, step=1, help='Izquierda: Priorizar Alcance, Derecha: Priorizar Calidad')
+quality_level = st.select_slider(
+    'Nivel de Calidad de Formación',
+    options=[0, 25, 50, 75, 100],
+    value=50,
+    help='Izquierda: Priorizar Alcance, Derecha: Priorizar Calidad'
+)
 
 # Función para calcular el número de personas formadas
 def calculate_people_formed(investment, quality_level, base_cost):
     # El costo efectivo por persona disminuye con el aumento del alcance (menor calidad)
     cost_per_person = base_cost * (1 + (100 - quality_level) / 100)
     return investment // cost_per_person
+
+# Función para obtener descripción del programa según el nivel de calidad
+def get_program_description(quality_level):
+    if quality_level == 0:
+        return "Programas: Webinars en línea, acceso a recursos digitales."
+    elif quality_level == 25:
+        return "Programas: Cursos en línea, talleres virtuales interactivos."
+    elif quality_level == 50:
+        return "Programas: Talleres presenciales, sesiones de mentoría."
+    elif quality_level == 75:
+        return "Programas: Programas de certificación, cursos especializados presenciales."
+    elif quality_level == 100:
+        return "Programas: Maestrías presenciales, programas avanzados de liderazgo."
 
 # Cálculo de la distribución de la inversión y número de personas formadas
 if total_percentage == 100:
@@ -46,6 +64,17 @@ if total_percentage == 100:
     youth_formed = calculate_people_formed(youth_investment, quality_level, base_cost_youth)
     directors_formed = calculate_people_formed(directors_investment, quality_level, base_cost_directors)
 
+    # Crear gráfica circular
+    st.write('### Distribución de la Inversión')
+    labels = ['Familia (Mapa)', 'Maestros (Veriedu)', 'Jóvenes (Dux)', 'Directores (ADEM)']
+    values = [family_investment, teachers_investment, youth_investment, directors_investment]
+    colors = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99']
+    
+    fig, ax = plt.subplots()
+    ax.pie(values, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
+    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    st.pyplot(fig)
+
     # Mostrar distribución de inversión en dólares
     st.write('### Distribución de la Inversión en Dólares')
     st.write(f'**Familia (Mapa):** ${family_investment:,.2f}')
@@ -53,30 +82,19 @@ if total_percentage == 100:
     st.write(f'**Jóvenes (Dux):** ${youth_investment:,.2f}')
     st.write(f'**Directores (ADEM):** ${directors_investment:,.2f}')
 
-    # Mostrar el nivel de calidad formativa
-    st.write('### Nivel de Calidad Formativa')
-    if quality_level < 50:
-        st.write(f'Priorizar Alcance (Nivel de Calidad: {quality_level}%)')
-    elif quality_level > 50:
-        st.write(f'Priorizar Calidad (Nivel de Calidad: {quality_level}%)')
-    else:
-        st.write(f'Equilibrado entre Alcance y Calidad (Nivel de Calidad: {quality_level}%)')
-
-    # Mostrar número de personas formadas
+    # Mostrar número de personas formadas y programas
     st.write('### Número de Personas Formadas')
     st.write(f'**Familia (Mapa):** {family_formed} personas')
     st.write(f'**Maestros (Veriedu):** {teachers_formed} personas')
     st.write(f'**Jóvenes (Dux):** {youth_formed} personas')
     st.write(f'**Directores (ADEM):** {directors_formed} personas')
 
-    # Crear gráfica de resumen
-    st.write('### Resumen Visual')
-    st.bar_chart({
-        'Familia (Mapa)': [family_formed],
-        'Maestros (Veriedu)': [teachers_formed],
-        'Jóvenes (Dux)': [youth_formed],
-        'Directores (ADEM)': [directors_formed]
-    })
+    st.write('### Descripción de los Programas')
+    st.write(get_program_description(quality_level))
+
+    # Mostrar el total de personas formadas
+    total_formed = family_formed + teachers_formed + youth_formed + directors_formed
+    st.write(f'## Total de Personas Formadas: {total_formed} personas')
 
 else:
     st.write('Por favor, asegúrese de que la suma de los porcentajes de inversión sea 100%.')
@@ -84,6 +102,7 @@ else:
 # Información adicional o llamada a la acción
 st.write('## ¿Interesado en invertir?')
 st.write('Contacte a Cavdux para más información sobre cómo puede contribuir y el impacto de su inversión.')
+
 
 
 
